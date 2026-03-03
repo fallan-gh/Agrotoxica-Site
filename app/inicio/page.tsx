@@ -17,9 +17,9 @@ import IntroScreen from '../../components/IntroScreen';
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
-const E        = [0.22, 1, 0.36, 1]    as const;
-const EB       = [0.34, 1.56, 0.64, 1] as const;
-const ES       = [0.16, 1, 0.30, 1]    as const;
+const E    = [0.22, 1, 0.36, 1]    as const;
+const EB   = [0.34, 1.56, 0.64, 1] as const;
+const ES   = [0.16, 1, 0.30, 1]    as const;
 const FEATURED = products[0];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -82,7 +82,7 @@ function MouseTrail({ isDark }: { isDark: boolean }) {
         x: e.clientX+(Math.random()-.5)*8,
         y: e.clientY+(Math.random()-.5)*8,
         vx:(Math.random()-.5)*.5, vy:(Math.random()-.5)*.5,
-        r:1.5+Math.random()*2.5, a:.5+Math.random()*.3,
+        r:1.5+Math.random()*2.5, a:0.5+Math.random()*0.3,
         c: i%3===0 ? '176,142,104' : (isDark ? '255,255,255' : '0,91,236'),
       });
     };
@@ -91,7 +91,7 @@ function MouseTrail({ isDark }: { isDark: boolean }) {
     const tick = () => {
       ctx.clearRect(0,0,canvas.width,canvas.height);
       for (let i=pts.length-1; i>=0; i--) {
-        const p=pts[i]; p.x+=p.vx; p.y+=p.vy; p.a-=.022; p.r*=.96;
+        const p=pts[i]; p.x+=p.vx; p.y+=p.vy; p.a-=0.022; p.r*=0.96;
         if (p.a<=0) { pts.splice(i,1); continue; }
         ctx.save(); ctx.globalAlpha=p.a; ctx.fillStyle=`rgba(${p.c},1)`;
         ctx.shadowBlur=8; ctx.shadowColor=ctx.fillStyle;
@@ -131,9 +131,9 @@ function Particles({ isDark }: { isDark: boolean }) {
     type P = { x:number;y:number;vx:number;vy:number;r:number;a:number;c:string };
     const pool: P[] = Array.from({ length:100 }, () => ({
       x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight,
-      vx:(Math.random()-.5)*.3, vy:-(Math.random()*.5+.1),
-      r:Math.random()*2+.4,
-      a:Math.random()*(isDark?.28:.12)+.04,
+      vx:(Math.random()-.5)*0.3, vy:-(Math.random()*0.5+0.1),
+      r:Math.random()*2+0.4,
+      a:Math.random()*(isDark ? 0.28 : 0.12) + 0.04,
       c:COLORS[Math.floor(Math.random()*COLORS.length)],
     }));
 
@@ -152,7 +152,7 @@ function Particles({ isDark }: { isDark: boolean }) {
     return () => { cancelAnimationFrame(rafRef.current); window.removeEventListener('resize', resize); };
   }, [isDark]);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" style={{ opacity:.55 }} />;
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" style={{ opacity:0.55 }} />;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -167,8 +167,8 @@ function Grid({ isDark }: { isDark: boolean }) {
       {Array.from({ length:140 }).map((_,i) => (
         <motion.div key={i} style={{ border:`0.5px solid ${color}` }}
           initial={{ opacity:0 }}
-          animate={{ opacity:[0,.6,0,.4,0] }}
-          transition={{ duration:6+(i%5), delay:(i*.04)%4, repeat:Infinity }}
+          animate={{ opacity:[0,0.6,0,0.4,0] }}
+          transition={{ duration:6+(i%5), delay:(i*0.04)%4, repeat:Infinity }}
         />
       ))}
     </div>
@@ -205,7 +205,7 @@ function SplitIn({ text, className='', delay=0, stagger=0.045 }:{
         <motion.span key={i} className="inline-block"
           initial={{ y:'120%', opacity:0, rotateX:-90, filter:'blur(8px)' }}
           animate={{ y:'0%', opacity:1, rotateX:0, filter:'blur(0px)' }}
-          transition={{ duration:.75, delay:delay+i*stagger, ease:ES }}
+          transition={{ duration:0.75, delay:delay+i*stagger, ease:ES }}
         >{c===' ' ? '\u00A0' : c}</motion.span>
       ))}
     </span>
@@ -220,13 +220,13 @@ function Glitch({ text, className='' }:{ text:string; className?:string }) {
     <span className={`relative inline-block ${className}`}>
       <motion.span className="absolute inset-0 text-agro-gold select-none pointer-events-none"
         style={{ clipPath:'inset(25% 0 55% 0)' }}
-        animate={{ x:[0,-6,5,-2,0], opacity:[0,.9,0,.6,0] }}
+        animate={{ x:[0,-6,5,-2,0], opacity:[0,0.9,0,0.6,0] }}
         transition={{ duration:4.5, repeat:Infinity, repeatDelay:8 }}
       >{text}</motion.span>
       <motion.span className="absolute inset-0 text-agro-blue select-none pointer-events-none"
         style={{ clipPath:'inset(58% 0 8% 0)', filter:'blur(0.6px)' }}
-        animate={{ x:[0,7,-4,3,0], opacity:[0,.6,0,.4,0] }}
-        transition={{ duration:4.5, repeat:Infinity, repeatDelay:8, delay:.08 }}
+        animate={{ x:[0,7,-4,3,0], opacity:[0,0.6,0,0.4,0] }}
+        transition={{ duration:4.5, repeat:Infinity, repeatDelay:8, delay:0.08 }}
       >{text}</motion.span>
       {text}
     </span>
@@ -238,10 +238,10 @@ function Glitch({ text, className='' }:{ text:string; className?:string }) {
 // ─────────────────────────────────────────────────────────────────────────────
 function OrbitRings({ mx, my, isDark }:{ mx:any; my:any; isDark:boolean }) {
   const rings = [
-    { s:280, dur:14, op:.18, dashed:false, f:.018 },
-    { s:480, dur:24, op:.11, dashed:true,  f:-.012 },
-    { s:680, dur:38, op:.07, dashed:false, f:.008 },
-    { s:900, dur:58, op:.04, dashed:true,  f:-.005 },
+    { s:280, dur:14, op:0.18, dashed:false, f:0.018 },
+    { s:480, dur:24, op:0.11, dashed:true,  f:-0.012 },
+    { s:680, dur:38, op:0.07, dashed:false, f:0.008 },
+    { s:900, dur:58, op:0.04, dashed:true,  f:-0.005 },
   ];
   return (
     <>
@@ -261,11 +261,11 @@ function OrbitRings({ mx, my, isDark }:{ mx:any; my:any; isDark:boolean }) {
               x:rx, y:ry,
             }}
             initial={{ scale:0, opacity:0 }}
-            animate={{ scale:[0,1.08,.96,1], opacity:[0,1,1,1], rotate:[0,360] }}
+            animate={{ scale:[0,1.08,0.96,1], opacity:[0,1,1,1], rotate:[0,360] }}
             transition={{
-              scale:  { duration:1.4, delay:.6+i*.2, ease:EB },
-              opacity:{ duration:1.4, delay:.6+i*.2 },
-              rotate: { duration:r.dur, repeat:Infinity, ease:'linear', delay:i*.3 },
+              scale:  { duration:1.4, delay:0.6+i*0.2, ease:EB },
+              opacity:{ duration:1.4, delay:0.6+i*0.2 },
+              rotate: { duration:r.dur, repeat:Infinity, ease:'linear', delay:i*0.3 },
             }}
           />
         );
@@ -286,7 +286,7 @@ function ScanSweep() {
       }}
       initial={{ top:'-20%' }}
       animate={{ top:'110%' }}
-      transition={{ duration:2, delay:.3, ease:'linear' }}
+      transition={{ duration:2, delay:0.3, ease:'linear' }}
     />
   );
 }
@@ -295,12 +295,14 @@ function ScanSweep() {
 // PRODUCT HERO — DINÂMICO 3D
 // ─────────────────────────────────────────────────────────────────────────────
 function ProductHero({ mx, my, isDark }:{ mx:any; my:any; isDark:boolean }) {
-  const px = useTransform(mx, (v:number) => v*.035);
-  const py = useTransform(my, (v:number) => v*.035);
+  const px = useTransform(mx, (v:number) => v*0.035);
+  const py = useTransform(my, (v:number) => v*0.035);
+  
+  // ✅ CORREÇÃO: Ternárias agora usam sintaxe padrão para evitar erro de Token
   const shadowFilter = useTransform(
     [mx, my] as any,
     ([vx,vy]:number[]) =>
-      `drop-shadow(${-vx*.03}px ${-vy*.03}px 60px rgba(176,142,104,${isDark?.45:.25})) drop-shadow(0px 40px 80px rgba(0,0,0,${isDark?.6:.12}))`
+      `drop-shadow(${-vx*0.03}px ${-vy*0.03}px 60px rgba(176,142,104,${isDark ? 0.45 : 0.25})) drop-shadow(0px 40px 80px rgba(0,0,0,${isDark ? 0.6 : 0.12}))`
   );
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -322,8 +324,7 @@ function ProductHero({ mx, my, isDark }:{ mx:any; my:any; isDark:boolean }) {
 
   const modelSrc = getFirstModel(currentProduct.model3d);
 
-  // 🚀 MÁGICA TÉCNICA: Definimos a tag como uma constante 'any'.
-  // O TypeScript para de procurar por 'model-viewer' na lista de tags oficiais.
+  // 🚀 MÁGICA TÉCNICA: Máscara para evitar erro de JSX.IntrinsicElements
   const MV = 'model-viewer' as any;
 
   return (
@@ -337,19 +338,18 @@ function ProductHero({ mx, my, isDark }:{ mx:any; my:any; isDark:boolean }) {
             : 'radial-gradient(circle, rgba(176,142,104,0.15) 0%, rgba(0,91,236,0.06) 50%, transparent 72%)',
           filter:'blur(50px)',
         }}
-        animate={{ scale:[1,1.15,1], opacity:[.7,1,.7] }}
+        animate={{ scale:[1,1.15,1], opacity:[0.7,1,0.7] }}
         transition={{ duration:3.5, repeat:Infinity, ease:'easeInOut' }}
       />
       
       <motion.div
         key={currentProduct.id}
-        initial={{ scale:.5, opacity:0, filter:'blur(30px)' }}
+        initial={{ scale:0.5, opacity:0, filter:'blur(30px)' }}
         animate={{ scale:1, opacity:1, filter:'blur(0px)' }}
-        exit={{ scale:.5, opacity:0, filter:'blur(30px)' }}
+        exit={{ scale:0.5, opacity:0, filter:'blur(30px)' }}
         transition={{ duration:1.4, ease:EB }}
         style={{ filter:shadowFilter, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
-        {/* AGORA USAMOS <MV /> EM VEZ DE <model-viewer /> */}
         <MV
           src={modelSrc}
           alt={`Modelo 3D de ${currentProduct.nome}`}
@@ -370,9 +370,9 @@ function ProductHero({ mx, my, isDark }:{ mx:any; my:any; isDark:boolean }) {
 // ─────────────────────────────────────────────────────────────────────────────
 function HeroSection({ isDark }:{ isDark:boolean }) {
   const { x:mx, y:my } = useMouse();
-  const bgX  = useTransform(mx, (v:number) => v*.008);
-  const bgY  = useTransform(my, (v:number) => v*.008);
-  const txtX = useTransform(mx, (v:number) => v*-.012);
+  const bgX  = useTransform(mx, (v:number) => v*0.008);
+  const bgY  = useTransform(my, (v:number) => v*0.008);
+  const txtX = useTransform(mx, (v:number) => v*-0.012);
 
   return (
     <section className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-agro-bg transition-colors duration-500">
@@ -388,18 +388,18 @@ function HeroSection({ isDark }:{ isDark:boolean }) {
             : 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.012) 2px,rgba(0,0,0,0.012) 4px)',
         }}
         animate={{ backgroundPositionY:['0px','4px'] }}
-        transition={{ duration:.14, repeat:Infinity, ease:'linear' }}
+        transition={{ duration:0.14, repeat:Infinity, ease:'linear' }}
       />
 
       <div className="absolute inset-0 pointer-events-none z-[2] mix-blend-overlay"
         style={{
           backgroundImage:`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E")`,
-          opacity:.5,
+          opacity:0.5,
         }}
       />
 
       <motion.div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-[3]"
-        style={{ x:bgX, y:bgY, opacity:.04 }}
+        style={{ x:bgX, y:bgY, opacity:0.04 }}
       >
         <Glitch text="AGROTÓXICA"
           className="font-space font-black text-[12vw] md:text-[18vw] uppercase tracking-[-0.03em] text-agro-blue leading-none"
@@ -415,24 +415,24 @@ function HeroSection({ isDark }:{ isDark:boolean }) {
       </div>
 
       <div className="absolute top-[10%] w-full z-[6] flex flex-col gap-3 pointer-events-none">
-        <Marquee isDark={isDark} text="AGROTÓXICA  ·  SAFRA 26  ·  TRAIA DE RESPEITO  ·  SISTEMA BRUTO  ·  O VENENO DA ROÇA" dir={1} speed={55} op={.08} />
-        <Marquee isDark={isDark} text="LIDA BRUTA  ·  MARCHA NO MAQUINÁRIO  ·  BOTA SUJA DE TERRA  ·  LOTE RESTRITO  ·  SEM MASSAGEM" dir={-1} speed={42} op={.05} size="text-xs" />
+        <Marquee isDark={isDark} text="AGROTÓXICA  ·  SAFRA 26  ·  TRAIA DE RESPEITO  ·  SISTEMA BRUTO  ·  O VENENO DA ROÇA" dir={1} speed={55} op={0.08} />
+        <Marquee isDark={isDark} text="LIDA BRUTA  ·  MARCHA NO MAQUINÁRIO  ·  BOTA SUJA DE TERRA  ·  LOTE RESTRITO  ·  SEM MASSAGEM" dir={-1} speed={42} op={0.05} size="text-xs" />
       </div>
       <div className="absolute bottom-[12%] w-full z-[6] flex flex-col gap-3 pointer-events-none">
-        <Marquee isDark={isDark} text="SÓ PRA QUEM GUENTA  ·  EDIÇÃO TÓXICA  ·  AGROTÓXICA  ·  LOTE 26  ·  CRIADO NO MATO" dir={-1} speed={48} op={.07} />
-        <Marquee isDark={isDark} text="POEIRA E PINGA  ·  MARCHA NO TRATOR  ·  CULTURA CAIPIRA  ·  AGRO É MATO  ·  SEM MASSAGEM" dir={1} speed={60} op={.04} size="text-xs" />
+        <Marquee isDark={isDark} text="SÓ PRA QUEM GUENTA  ·  EDIÇÃO TÓXICA  ·  AGROTÓXICA  ·  LOTE 26  ·  CRIADO NO MATO" dir={-1} speed={48} op={0.07} />
+        <Marquee isDark={isDark} text="POEIRA E PINGA  ·  MARCHA NO TRATOR  ·  CULTURA CAIPIRA  ·  AGRO É MATO  ·  SEM MASSAGEM" dir={1} speed={60} op={0.04} size="text-xs" />
       </div>
 
       <div className="relative z-[20] w-full h-full flex flex-col justify-between px-6 md:px-12 py-10 pointer-events-none select-none">
 
         <motion.div className="flex items-start justify-between"
           initial={{ opacity:0, y:-20 }} animate={{ opacity:1, y:0 }}
-          transition={{ duration:.8, delay:.8, ease:E }}
+          transition={{ duration:0.8, delay:0.8, ease:E }}
         >
           <div className="flex items-center gap-3">
             <motion.div
               initial={{ scale:0, opacity:0 }} animate={{ scale:1, opacity:1 }}
-              transition={{ duration:.7, delay:.9, ease:EB }}
+              transition={{ duration:0.7, delay:0.9, ease:EB }}
               className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center"
               style={{ background:'rgba(176,142,104,0.15)', border:'1px solid rgba(176,142,104,0.3)' }}
             >
@@ -442,24 +442,24 @@ function HeroSection({ isDark }:{ isDark:boolean }) {
             <div>
               <motion.p className="font-space font-black text-xs uppercase tracking-[0.2em] text-agro-blue"
                 initial={{ opacity:0, x:-10 }} animate={{ opacity:1, x:0 }}
-                transition={{ delay:1.0, duration:.5 }}
+                transition={{ delay:1.0, duration:0.5 }}
               >Agrotóxica</motion.p>
               <motion.p className="font-poppins text-[9px] uppercase tracking-[0.3em] text-agro-gold"
-                style={{ opacity:.7 }}
-                initial={{ opacity:0 }} animate={{ opacity:.7 }}
-                transition={{ delay:1.1, duration:.5 }}
+                style={{ opacity:0.7 }}
+                initial={{ opacity:0 }} animate={{ opacity:0.7 }}
+                transition={{ delay:1.1, duration:0.5 }}
               >Águia voa com águia</motion.p>
             </div>
           </div>
 
           <motion.div
-            initial={{ opacity:0, scale:.7 }} animate={{ opacity:1, scale:1 }}
-            transition={{ duration:.6, delay:1.2, ease:EB }}
+            initial={{ opacity:0, scale:0.7 }} animate={{ opacity:1, scale:1 }}
+            transition={{ duration:0.6, delay:1.2, ease:EB }}
             className="flex items-center gap-2 px-3 py-1.5 rounded-full"
             style={{ background:'rgba(176,142,104,0.1)', border:'1px solid rgba(176,142,104,0.25)' }}
           >
             <motion.div className="w-1.5 h-1.5 rounded-full bg-agro-gold"
-              animate={{ scale:[1,1.6,1], opacity:[1,.4,1] }}
+              animate={{ scale:[1,1.6,1], opacity:[1,0.4,1] }}
               transition={{ duration:1.4, repeat:Infinity }}
             />
             <span className="font-space font-bold text-[10px] uppercase tracking-widest text-agro-gold">
@@ -471,41 +471,41 @@ function HeroSection({ isDark }:{ isDark:boolean }) {
         <div className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 max-w-xs md:max-w-md pointer-events-auto">
           <motion.div className="flex items-center gap-3 mb-4"
             initial={{ opacity:0, x:-30 }} animate={{ opacity:1, x:0 }}
-            transition={{ duration:.7, delay:.7, ease:E }}
+            transition={{ duration:0.7, delay:0.7, ease:E }}
           >
             <motion.div className="h-[1px] w-8 bg-agro-gold"
               initial={{ scaleX:0 }} animate={{ scaleX:1 }}
-              transition={{ duration:.6, delay:.9 }}
+              transition={{ duration:0.6, delay:0.9 }}
             />
             <span className="font-poppins font-bold text-xs uppercase tracking-[0.35em] text-agro-gold">Coleção 2026</span>
           </motion.div>
 
           <h1 className="font-space font-black leading-[0.9] mb-6" style={{ perspective:800 }}>
             <div className="text-[4rem] md:text-[5.5rem] uppercase tracking-tighter text-agro-blue">
-              <SplitIn text="AGRO" delay={.9} stagger={.06} />
+              <SplitIn text="AGRO" delay={0.9} stagger={0.06} />
             </div>
             <div className="text-[4rem] md:text-[5.5rem] uppercase tracking-tighter text-agro-gold">
-              <SplitIn text="TÓXICA" delay={1.15} stagger={.06} />
+              <SplitIn text="TÓXICA" delay={1.15} stagger={0.06} />
             </div>
           </h1>
 
           <motion.p className="font-poppins text-sm text-agro-blue/60 leading-relaxed mb-8 max-w-xs"
             initial={{ opacity:0, y:15 }} animate={{ opacity:1, y:0 }}
-            transition={{ delay:1.7, duration:.8, ease:E }}
+            transition={{ delay:1.7, duration:0.8, ease:E }}
           >
             Vestuário de alta performance para quem domina o campo e dita o estilo.
           </motion.p>
 
           <motion.div className="flex gap-3"
             initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
-            transition={{ delay:1.9, duration:.7, ease:E }}
+            transition={{ delay:1.9, duration:0.7, ease:E }}
           >
             <Link href="/?skipIntro=true">
               <motion.button
                 className="relative px-7 py-3.5 rounded-2xl font-space font-bold text-sm uppercase tracking-widest overflow-hidden group bg-agro-gold"
                 style={{ color:'var(--color-bg)' }}
                 whileHover={{ scale:1.04, boxShadow:'0 0 30px 8px rgba(176,142,104,0.3)' }}
-                whileTap={{ scale:.95 }}
+                whileTap={{ scale:0.95 }}
               >
                 <motion.div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative z-10">Explorar Coleção</span>
@@ -515,7 +515,7 @@ function HeroSection({ isDark }:{ isDark:boolean }) {
               <motion.button
                 className="px-7 py-3.5 rounded-2xl font-space font-bold text-sm uppercase tracking-widest text-agro-blue/60 hover:text-agro-blue transition-colors duration-300 border border-agro-blue/15 hover:border-agro-gold/40"
                 whileHover={{ scale:1.04 }}
-                whileTap={{ scale:.95 }}
+                whileTap={{ scale:0.95 }}
               >
                 Ver Peça
               </motion.button>
@@ -526,7 +526,7 @@ function HeroSection({ isDark }:{ isDark:boolean }) {
         <motion.div
           className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 flex flex-col items-end gap-4"
           initial={{ opacity:0, x:30 }} animate={{ opacity:1, x:0 }}
-          transition={{ duration:.8, delay:1.5, ease:E }}
+          transition={{ duration:0.8, delay:1.5, ease:E }}
           style={{ x:txtX }}
         >
           <div className="w-[1px] h-20" style={{ background:'linear-gradient(to bottom, transparent, rgba(176,142,104,0.5), transparent)' }} />
@@ -537,7 +537,7 @@ function HeroSection({ isDark }:{ isDark:boolean }) {
 
         <motion.div className="flex items-end justify-between"
           initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
-          transition={{ duration:.8, delay:2.0, ease:E }}
+          transition={{ duration:0.8, delay:2.0, ease:E }}
         >
           <div className="flex items-center gap-6">
             {[
@@ -547,7 +547,7 @@ function HeroSection({ isDark }:{ isDark:boolean }) {
             ].map((s,i) => (
               <motion.div key={s.label}
                 initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
-                transition={{ delay:2.1+i*.1, duration:.5 }}
+                transition={{ delay:2.1+i*0.1, duration:0.5 }}
               >
                 <p className="font-space font-black text-xl text-agro-blue">{s.value}</p>
                 <p className="font-poppins text-[9px] uppercase tracking-[0.25em] text-agro-blue/30">{s.label}</p>
@@ -587,7 +587,7 @@ function ManifestoWord({ word, gold, index }:{ word:string; gold:boolean; index:
         className={`inline-block font-space font-black text-5xl md:text-7xl lg:text-8xl uppercase tracking-tighter leading-none ${gold ? 'text-agro-gold' : 'text-agro-blue'}`}
         initial={{ y:'120%', opacity:0, rotateX:-70, filter:'blur(12px)' }}
         animate={inView ? { y:'0%', opacity:1, rotateX:0, filter:'blur(0px)' } : {}}
-        transition={{ duration:.9, delay:index*.1, ease:ES }}
+        transition={{ duration:0.9, delay:index*0.1, ease:ES }}
       >{word}</motion.span>
     </span>
   );
@@ -600,7 +600,7 @@ function ManifestoSection() {
     <section ref={ref} className="relative w-full py-40 overflow-hidden bg-agro-bg transition-colors duration-500">
       <motion.div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
         style={{ opacity:0 }}
-        animate={inView ? { opacity:.03 } : {}}
+        animate={inView ? { opacity:0.03 } : {}}
         transition={{ duration:2 }}
       >
         <span className="font-space font-black text-[20vw] uppercase text-agro-blue leading-none whitespace-nowrap">MANIFESTO</span>
@@ -615,7 +615,7 @@ function ManifestoSection() {
       <div className="container mx-auto px-6 md:px-12">
         <motion.p className="font-poppins text-xs uppercase tracking-[0.4em] text-agro-gold/50 mb-10"
           initial={{ opacity:0, y:20 }} animate={inView ? { opacity:1, y:0 } : {}}
-          transition={{ duration:.7, delay:.2 }}
+          transition={{ duration:0.7, delay:0.2 }}
         >— Manifesto da Marca</motion.p>
 
         <div className="flex flex-wrap" style={{ perspective:800 }}>
@@ -624,7 +624,7 @@ function ManifestoSection() {
 
         <motion.p className="mt-16 max-w-lg font-poppins text-base text-agro-blue/40 leading-relaxed"
           initial={{ opacity:0, y:30 }} animate={inView ? { opacity:1, y:0 } : {}}
-          transition={{ duration:1, delay:.8 }}
+          transition={{ duration:1, delay:0.8 }}
         >
           Nascida na fronteira entre a lavoura e a cultura urbana, a Agrotóxica é o brasão
           de quem produz o Brasil com a mesma intensidade com que vive e se veste.
@@ -634,7 +634,7 @@ function ManifestoSection() {
       <motion.div className="w-full h-[1px] mt-16"
         style={{ background:'linear-gradient(to right, transparent, rgba(176,142,104,0.15), transparent)' }}
         initial={{ scaleX:0 }} animate={inView ? { scaleX:1 } : {}}
-        transition={{ duration:1.5, delay:.5 }}
+        transition={{ duration:1.5, delay:0.5 }}
       />
     </section>
   );
@@ -649,14 +649,14 @@ function CollectionCard({ produto, index, isDark }:{ produto:typeof products[0];
 
   return (
     <motion.div ref={ref}
-      initial={{ opacity:0, y:60, scale:.9 }}
+      initial={{ opacity:0, y:60, scale:0.9 }}
       animate={inView ? { opacity:1, y:0, scale:1 } : {}}
-      transition={{ duration:.75, delay:index*.1, ease:E }}
+      transition={{ duration:0.75, delay:index*0.1, ease:E }}
     >
       <Link href={`/produto/${produto.id}`}>
         <motion.div
-          whileHover={{ y:-12, scale:1.03 }} whileTap={{ scale:.96 }}
-          transition={{ duration:.32, ease:E }}
+          whileHover={{ y:-12, scale:1.03 }} whileTap={{ scale:0.96 }}
+          transition={{ duration:0.32, ease:E }}
           className="group relative cursor-pointer"
         >
           <div
@@ -695,7 +695,7 @@ function CollectionCard({ produto, index, isDark }:{ produto:typeof products[0];
             </div>
             <motion.div className="absolute bottom-0 left-0 h-[2px] bg-agro-gold rounded-full"
               initial={{ width:'0%' }} whileHover={{ width:'100%' }}
-              transition={{ duration:.36, ease:E }}
+              transition={{ duration:0.36, ease:E }}
             />
           </div>
         </motion.div>
@@ -714,30 +714,30 @@ function CollectionSection({ isDark }:{ isDark:boolean }) {
           <div>
             <motion.p className="font-poppins text-xs uppercase tracking-[0.4em] text-agro-gold/50 mb-3"
               initial={{ opacity:0, x:-20 }} animate={inView ? { opacity:1, x:0 } : {}}
-              transition={{ duration:.6, delay:.1 }}
+              transition={{ duration:0.6, delay:0.1 }}
             >— A Coleção</motion.p>
             <h2 className="font-space font-black text-5xl md:text-7xl uppercase tracking-tighter leading-none" style={{ perspective:600 }}>
               <span className="overflow-hidden inline-block">
                 <motion.span className="inline-block text-agro-blue"
                   initial={{ y:'110%', rotateX:-60 }}
                   animate={inView ? { y:'0%', rotateX:0 } : {}}
-                  transition={{ duration:.8, delay:.2, ease:ES }}
+                  transition={{ duration:0.8, delay:0.2, ease:ES }}
                 >TODAS AS</motion.span>
               </span>{' '}
               <span className="overflow-hidden inline-block">
                 <motion.span className="inline-block text-agro-gold"
                   initial={{ y:'110%', rotateX:-60 }}
                   animate={inView ? { y:'0%', rotateX:0 } : {}}
-                  transition={{ duration:.8, delay:.35, ease:ES }}
+                  transition={{ duration:0.8, delay:0.35, ease:ES }}
                 >PEÇAS</motion.span>
               </span>
             </h2>
           </div>
-          <motion.div initial={{ opacity:0, x:20 }} animate={inView ? { opacity:1, x:0 } : {}} transition={{ duration:.6, delay:.4 }}>
+          <motion.div initial={{ opacity:0, x:20 }} animate={inView ? { opacity:1, x:0 } : {}} transition={{ duration:0.6, delay:0.4 }}>
             <Link href="/?skipIntro=true">
               <motion.button
                 className="px-6 py-3 rounded-2xl font-space font-bold text-xs uppercase tracking-widest text-agro-blue/50 hover:text-agro-blue border border-agro-blue/10 hover:border-agro-gold/40 transition-all"
-                whileHover={{ scale:1.04 }} whileTap={{ scale:.96 }}
+                whileHover={{ scale:1.04 }} whileTap={{ scale:0.96 }}
               >Ver Vitrine →</motion.button>
             </Link>
           </motion.div>
@@ -745,7 +745,7 @@ function CollectionSection({ isDark }:{ isDark:boolean }) {
         <motion.div className="h-[1px] mt-6 rounded-full"
           style={{ background:'linear-gradient(to right, rgba(176,142,104,0.5), rgba(0,91,236,0.3), transparent)', width:'50%' }}
           initial={{ scaleX:0, originX:0 }} animate={inView ? { scaleX:1 } : {}}
-          transition={{ duration:1.2, delay:.5, ease:E }}
+          transition={{ duration:1.2, delay:0.5, ease:E }}
         />
       </div>
       <div className="container mx-auto px-6 md:px-12">
@@ -781,13 +781,13 @@ function StatsBar({ isDark }:{ isDark:boolean }) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s,i) => (
             <motion.div key={s.l} className="flex flex-col items-center text-center gap-1"
-              initial={{ opacity:0, y:30, scale:.85 }}
+              initial={{ opacity:0, y:30, scale:0.85 }}
               animate={inView ? { opacity:1, y:0, scale:1 } : {}}
-              transition={{ duration:.7, delay:i*.12, ease:EB }}
+              transition={{ duration:0.7, delay:i*0.12, ease:EB }}
             >
               <motion.p className="font-space font-black text-5xl md:text-6xl text-agro-gold leading-none"
                 animate={{ textShadow:['0 0 0px rgba(176,142,104,0)','0 0 20px rgba(176,142,104,0.5)','0 0 0px rgba(176,142,104,0)'] }}
-                transition={{ duration:3, delay:i*.3, repeat:Infinity }}
+                transition={{ duration:3, delay:i*0.3, repeat:Infinity }}
               >{s.v}</motion.p>
               <p className="font-poppins text-[10px] uppercase tracking-[0.3em] text-agro-blue/30">{s.l}</p>
             </motion.div>
@@ -795,7 +795,7 @@ function StatsBar({ isDark }:{ isDark:boolean }) {
         </div>
       </div>
       <div className="mt-14">
-          <Marquee isDark={isDark} text="AGROTÓXICA  ·  MOAGEM  ·  TRAIADO  ·  MODÃO  ·  CHIQUE NO ÚRTIMO  ·  TCHAU BRIGADO  ·  ESTILO CAIPIRA" dir={1} speed={50} op={.1} />
+          <Marquee isDark={isDark} text="AGROTÓXICA  ·  MOAGEM  ·  TRAIADO  ·  MODÃO  ·  CHIQUE NO ÚRTIMO  ·  TCHAU BRIGADO  ·  ESTILO CAIPIRA" dir={1} speed={50} op={0.1} />
       </div>
     </section>
   );
@@ -811,7 +811,7 @@ function FooterCTA() {
     <section ref={ref} className="relative w-full py-40 overflow-hidden flex items-center justify-center bg-agro-bg transition-colors duration-500">
       <motion.div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
         style={{ opacity:0 }}
-        animate={inView ? { opacity:.03 } : {}}
+        animate={inView ? { opacity:0.03 } : {}}
         transition={{ duration:2 }}
       >
         <span className="font-space font-black text-[18vw] uppercase text-agro-blue leading-none whitespace-nowrap">TERRITÓRIO</span>
@@ -819,36 +819,36 @@ function FooterCTA() {
 
       <motion.div className="absolute rounded-full pointer-events-none"
         style={{ width:500, height:500, border:'1px solid rgba(176,142,104,0.08)' }}
-        animate={{ rotate:[0,360], scale:[.95,1.05,.95] }}
+        animate={{ rotate:[0,360], scale:[0.95,1.05,0.95] }}
         transition={{ rotate:{ duration:30, repeat:Infinity, ease:'linear' }, scale:{ duration:8, repeat:Infinity } }}
       />
 
       <div className="relative z-10 flex flex-col items-center text-center gap-8">
         <motion.p className="font-poppins text-xs uppercase tracking-[0.4em] text-agro-gold/50"
           initial={{ opacity:0, y:20 }} animate={inView ? { opacity:1, y:0 } : {}}
-          transition={{ duration:.7, delay:.2 }}
+          transition={{ duration:0.7, delay:0.2 }}
         >— Entre no Território</motion.p>
 
         <div style={{ perspective:800 }}>
           <motion.h2 className="font-space font-black text-5xl md:text-7xl lg:text-8xl uppercase tracking-tighter leading-none text-agro-blue"
             initial={{ y:'100%', opacity:0, rotateX:-60 }}
             animate={inView ? { y:'0%', opacity:1, rotateX:0 } : {}}
-            transition={{ duration:1, delay:.3, ease:ES }}
+            transition={{ duration:1, delay:0.3, ease:ES }}
           >
             Vista o campo.<br />
             <span className="text-agro-gold">Domine o jogo.</span>
           </motion.h2>
         </div>
 
-        <motion.div initial={{ opacity:0, scale:.8 }} animate={inView ? { opacity:1, scale:1 } : {}}
-          transition={{ duration:.8, delay:.8, ease:EB }}
+        <motion.div initial={{ opacity:0, scale:0.8 }} animate={inView ? { opacity:1, scale:1 } : {}}
+          transition={{ duration:0.8, delay:0.8, ease:EB }}
         >
           <Link href="/?skipIntro=true">
             <motion.button
               className="relative px-12 py-5 rounded-2xl font-space font-bold text-lg uppercase tracking-widest overflow-hidden group bg-agro-gold"
               style={{ color:'var(--color-bg)' }}
               whileHover={{ scale:1.05, boxShadow:'0 0 50px 15px rgba(176,142,104,0.3)' }}
-              whileTap={{ scale:.95 }}
+              whileTap={{ scale:0.95 }}
               animate={{ boxShadow:['0 0 0px rgba(176,142,104,0)','0 0 30px 8px rgba(176,142,104,0.2)','0 0 0px rgba(176,142,104,0)'] }}
               transition={{ boxShadow:{ duration:2.5, repeat:Infinity } }}
             >
@@ -899,7 +899,7 @@ function HomeContent() {
           className="min-h-screen bg-agro-bg transition-colors duration-500"
           initial={{ opacity:0 }}
           animate={{ opacity:1 }}
-          transition={{ duration:.8 }}
+          transition={{ duration:0.8 }}
         >
           <HeroSection isDark={isDark} />
           <ManifestoSection />

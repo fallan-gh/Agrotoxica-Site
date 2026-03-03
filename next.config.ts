@@ -2,15 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   typescript: {
-    // 🚀 Isso força a Vercel a ignorar erros de TS e terminar o build
+    // 🚀 Isso permite que o build finalize mesmo com o erro do model-viewer
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    // 🛡️ Ignora avisos de lint para o build ser mais rápido
-    ignoreDuringBuilds: true,
-  },
+  }
 };
 
 export default nextConfig;
-
-//fiz sexo//
