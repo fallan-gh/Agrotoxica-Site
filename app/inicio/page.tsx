@@ -13,6 +13,7 @@ import { products } from '../../data/products';
 import Hotbar from '../../components/Hotbar';
 import DiscountPopup from '../../components/DiscountPopup';
 import IntroScreen from '../../components/IntroScreen';
+import Script from 'next/script'; // 🚀 ADICIONE ESTA LINHA AQUI
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
@@ -298,7 +299,6 @@ function ProductHero({ mx, my, isDark }:{ mx:any; my:any; isDark:boolean }) {
   const px = useTransform(mx, (v:number) => v*0.035);
   const py = useTransform(my, (v:number) => v*0.035);
   
-  // ✅ CORREÇÃO: Ternárias agora usam sintaxe padrão para evitar erro de Token
   const shadowFilter = useTransform(
     [mx, my] as any,
     ([vx,vy]:number[]) =>
@@ -308,7 +308,7 @@ function ProductHero({ mx, my, isDark }:{ mx:any; my:any; isDark:boolean }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    import('@google/model-viewer');
+    // 🚀 O IMPORT PESADO FOI REMOVIDO DAQUI
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % products.length);
     }, 10000);
@@ -323,46 +323,49 @@ function ProductHero({ mx, my, isDark }:{ mx:any; my:any; isDark:boolean }) {
   };
 
   const modelSrc = getFirstModel(currentProduct.model3d);
-
-  // 🚀 MÁGICA TÉCNICA: Máscara para evitar erro de JSX.IntrinsicElements
   const MV = 'model-viewer' as any;
 
   return (
-    <motion.div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
-      style={{ x:px, y:py }}
-    >
-      <motion.div className="absolute w-80 h-80 rounded-full pointer-events-none"
-        style={{
-          background: isDark
-            ? 'radial-gradient(circle, rgba(176,142,104,0.22) 0%, rgba(0,91,236,0.1) 50%, transparent 72%)'
-            : 'radial-gradient(circle, rgba(176,142,104,0.15) 0%, rgba(0,91,236,0.06) 50%, transparent 72%)',
-          filter:'blur(50px)',
-        }}
-        animate={{ scale:[1,1.15,1], opacity:[0.7,1,0.7] }}
-        transition={{ duration:3.5, repeat:Infinity, ease:'easeInOut' }}
-      />
+    <>
+      {/* 🚀 O GOOGLE CARREGA O MODEL-VIEWER DIRETO DA NUVEM AGORA */}
+      <Script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js" />
       
-      <motion.div
-        key={currentProduct.id}
-        initial={{ scale:0.5, opacity:0, filter:'blur(30px)' }}
-        animate={{ scale:1, opacity:1, filter:'blur(0px)' }}
-        exit={{ scale:0.5, opacity:0, filter:'blur(30px)' }}
-        transition={{ duration:1.4, ease:EB }}
-        style={{ filter:shadowFilter, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      <motion.div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
+        style={{ x:px, y:py }}
       >
-        <MV
-          src={modelSrc}
-          alt={`Modelo 3D de ${currentProduct.nome}`}
-          auto-rotate
-          rotation-per-second="30deg"
-          camera-controls={false}
-          exposure="0.6"
-          shadow-intensity="0"
-          environment-image="neutral"
-          style={{ width: '480px', height: '480px', pointerEvents: 'none' }}
+        <motion.div className="absolute w-80 h-80 rounded-full pointer-events-none"
+          style={{
+            background: isDark
+              ? 'radial-gradient(circle, rgba(176,142,104,0.22) 0%, rgba(0,91,236,0.1) 50%, transparent 72%)'
+              : 'radial-gradient(circle, rgba(176,142,104,0.15) 0%, rgba(0,91,236,0.06) 50%, transparent 72%)',
+            filter:'blur(50px)',
+          }}
+          animate={{ scale:[1,1.15,1], opacity:[0.7,1,0.7] }}
+          transition={{ duration:3.5, repeat:Infinity, ease:'easeInOut' }}
         />
+        
+        <motion.div
+          key={currentProduct.id}
+          initial={{ scale:0.5, opacity:0, filter:'blur(30px)' }}
+          animate={{ scale:1, opacity:1, filter:'blur(0px)' }}
+          exit={{ scale:0.5, opacity:0, filter:'blur(30px)' }}
+          transition={{ duration:1.4, ease:EB }}
+          style={{ filter:shadowFilter, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        >
+          <MV
+            src={modelSrc}
+            alt={`Modelo 3D de ${currentProduct.nome}`}
+            auto-rotate
+            rotation-per-second="30deg"
+            camera-controls={false}
+            exposure="0.6"
+            shadow-intensity="0"
+            environment-image="neutral"
+            style={{ width: '480px', height: '480px', pointerEvents: 'none' }}
+          />
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </>
   );
 }
 // ─────────────────────────────────────────────────────────────────────────────
